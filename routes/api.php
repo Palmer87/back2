@@ -26,7 +26,8 @@ Route::get('/login', function () {
     return response()->json(['message' => 'Unauthenticated.'], 401);
 })->name('login');
 // Routes publiques (lecture seule)
-Route::apiResource('articles', ArticleController::class)->only(['index', 'show']);
+Route::get('articles/published', [ArticleController::class, 'published']);
+Route::apiResource('articles', ArticleController::class)->only(['show']);
 Route::apiResource('projects', ProjectController::class)->only(['index', 'show']);
 Route::apiResource('biographies', BiographyController::class)->only(['index', 'show']);
 Route::apiResource('documents', DocumentController::class)->only(['index', 'show']);
@@ -39,7 +40,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     // Routes protégées (création, modification, suppression)
-    Route::apiResource('articles', ArticleController::class)->except(['index', 'show']);
+    Route::apiResource('articles', ArticleController::class)->except(['show']);
+    Route::put('articles/{article}/publish', [ArticleController::class, 'publish']); 
+    Route::put('articles/{article}/unpublish', [ArticleController::class, 'unpublish']);
     Route::apiResource('projects', ProjectController::class)->except(['index', 'show']);
     Route::apiResource('biographies', BiographyController::class)->except(['index', 'show']);
     // Gestion de la newsletter

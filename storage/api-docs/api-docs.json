@@ -264,7 +264,7 @@
                 ],
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "properties": {
                                     "title": {
@@ -275,6 +275,14 @@
                                     },
                                     "typePart": {
                                         "type": "string"
+                                    },
+                                    "image_url": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "video_url": {
+                                        "type": "string",
+                                        "format": "binary"
                                     },
                                     "publier_le": {
                                         "type": "string",
@@ -334,6 +342,102 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/articles/{article}/publish": {
+            "put": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Publier un article",
+                "operationId": "df63bd101fd094096d2440adafba2e99",
+                "parameters": [
+                    {
+                        "name": "article",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Article publié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Article"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/articles/{article}/unpublish": {
+            "put": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Retirer un article",
+                "operationId": "79919e8cdfc6a083692afc8456415bb6",
+                "parameters": [
+                    {
+                        "name": "article",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Article retiré",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Article"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/articles/published": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Liste tous les articles publiés",
+                "operationId": "7fad6168968448f0142ad00edd715fc6",
+                "responses": {
+                    "200": {
+                        "description": "Liste des articles publiés",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Article"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/register": {
@@ -746,15 +850,13 @@
                         "bearerAuth": []
                     }
                 ]
-            }
-        },
-        "/contact": {
+            },
             "post": {
                 "tags": [
                     "Contacts"
                 ],
                 "summary": "Envoyer un message de contact (Public)",
-                "operationId": "a9d703d146937636b69eb7e9825da5de",
+                "operationId": "77b53a0b0cb97bf04eafa192e4cbac4e",
                 "requestBody": {
                     "required": true,
                     "content": {

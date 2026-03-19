@@ -26,7 +26,7 @@ class ContactController extends Controller
     }
 
     #[OA\Post(
-        path: "/contact",
+        path: "/contacts",
         summary: "Envoyer un message de contact (Public)",
         tags: ["Contacts"],
         requestBody: new OA\RequestBody(

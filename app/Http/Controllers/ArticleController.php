@@ -24,7 +24,14 @@ class ArticleController extends Controller
     )]
     public function index()
     {
-        return response()->json(Article::latest()->get());
+        try  {
+            return response()->json(Article::latest()->get());
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la récupération des articles',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     #[OA\Post(
@@ -128,14 +135,19 @@ class ArticleController extends Controller
             new OA\Parameter(name: "article", in: "path", required: true, schema: new OA\Schema(type: "integer"))
         ],
         requestBody: new OA\RequestBody(
-            content: new OA\JsonContent(
-                properties: [
-                    new OA\Property(property: "title", type: "string"),
-                    new OA\Property(property: "content", type: "string"),
-                    new OA\Property(property: "typePart", type: "string"),
-                    new OA\Property(property: "publier_le", type: "string", format: "date"),
-                    new OA\Property(property: "retirer_le", type: "string", format: "date")
-                ]
+            content: new OA\MediaType(
+                mediaType: "multipart/form-data",
+                schema: new OA\Schema(
+                    properties: [
+                        new OA\Property(property: "title", type: "string"),
+                        new OA\Property(property: "content", type: "string"),
+                        new OA\Property(property: "typePart", type: "string"),
+                        new OA\Property(property: "image_url", type: "string", format: "binary"),
+                        new OA\Property(property: "video_url", type: "string", format: "binary"),
+                        new OA\Property(property: "publier_le", type: "string", format: "date"),
+                        new OA\Property(property: "retirer_le", type: "string", format: "date")
+                    ]
+                )
             )
         ),
         responses: [
@@ -183,4 +195,68 @@ class ArticleController extends Controller
             'message' => 'Article supprimé avec succès'
         ]);
     }
+    // publier un article
+#[OA\Put(
+    path: "/articles/{article}/publish",
+    summary: "Publier un article",
+    tags: ["Articles"],
+    security: [["bearerAuth" => []]],
+    parameters: [
+        new OA\Parameter(name: "article", in: "path", required: true, schema: new OA\Schema(type: "integer"))
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Article publié", content: new OA\JsonContent(ref: "#/components/schemas/Article"))
+    ]
+)]
+public function publish(Article $article)
+{
+    $article->update([
+        'publier' => true,
+        'publier_le' => now(),
+        'retirer_le' => now()->addDays(30)
+    ]);
+
+    return response()->json($article);
+}
+// retirer un article
+#[OA\Put(
+    path: "/articles/{article}/unpublish",
+    summary: "Retirer un article",
+    tags: ["Articles"],
+    security: [["bearerAuth" => []]],
+    parameters: [
+        new OA\Parameter(name: "article", in: "path", required: true, schema: new OA\Schema(type: "integer"))
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Article retiré", content: new OA\JsonContent(ref: "#/components/schemas/Article"))
+    ]
+)]
+public function unpublish(Article $article)
+{
+    $article->update([
+        'publier' => false,
+        'retirer_le' => now()
+    ]);
+
+    return response()->json($article);
+}   
+
+//liste des articles publier
+#[OA\Get(
+    path: "/articles/published",
+    summary: "Liste tous les articles publiés",
+    tags: ["Articles"],
+    responses: [
+        new OA\Response(
+            response: 200,
+            description: "Liste des articles publiés",
+            content: new OA\JsonContent(type: "array", items: new OA\Items(ref: "#/components/schemas/Article"))
+        )
+    ]
+)]
+public function published()
+{
+    return response()->json(Article::where('publier', true)->get());
+}   
+
 }
