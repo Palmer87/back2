@@ -4,7 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: "Article",
+    title: "Article",
+    description: "Modèle représentant un article de blog ou une actualité",
+    properties: [
+        new OA\Property(property: "id", type: "integer", example: 1),
+        new OA\Property(property: "title", type: "string", example: "Titre de l'article"),
+        new OA\Property(property: "content", type: "string", example: "Contenu de l'article..."),
+        new OA\Property(property: "slug", type: "string", example: "titre-de-l-article"),
+        new OA\Property(property: "image_url", type: "string", nullable: true, example: "images/photo.jpg"),
+        new OA\Property(property: "video_url", type: "string", nullable: true, example: "videos/clip.mp4"),
+        new OA\Property(property: "typePart", type: "string", example: "communique"),
+        new OA\Property(property: "auteur", type: "integer", description: "ID de l'auteur", example: 1),
+        new OA\Property(property: "publier_le", type: "string", format: "date", nullable: true),
+        new OA\Property(property: "retirer_le", type: "string", format: "date", nullable: true),
+        new OA\Property(property: "created_at", type: "string", format: "date-time"),
+        new OA\Property(property: "updated_at", type: "string", format: "date-time")
+    ]
+)]
 class Article extends Model
 {
     use HasFactory;
