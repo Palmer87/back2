@@ -35,16 +35,32 @@ class Project extends Model
         'description',
         'status',
         'image_path',
+        'images',
         'start_date',
         'end_date',
         'auteur',
     ];
 
-    protected $appends = ['full_image_url'];
+    protected $casts = [
+        'images' => 'array',
+    ];
+
+    protected $appends = ['full_image_url', 'all_images_urls'];
 
     public function getFullImageUrlAttribute()
     {
         return $this->image_path ? asset('storage/' . $this->image_path) : null;
+    }
+
+    public function getAllImagesUrlsAttribute()
+    {
+        if (!$this->images) {
+            return [];
+        }
+
+        return array_map(function ($path) {
+            return asset('storage/' . $path);
+        }, $this->images);
     }
 
     public function user()

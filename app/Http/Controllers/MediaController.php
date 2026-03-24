@@ -24,7 +24,7 @@ class MediaController extends Controller
     )]
     public function index()
     {
-        return response()->json(Media::latest()->get());
+        return response()->json(Media::latest()->paginate(20));
     }
 
     #[OA\Post(
@@ -108,6 +108,9 @@ class MediaController extends Controller
     )]
     public function destroy(string $id)
     {
+        if (auth()->user()->role !== 'admin') {
+            return response()->json(['message' => 'Accès refusé. Réservé aux administrateurs.'], 403);
+        }
         $media = Media::findOrFail($id);
         
         // Supprimer le fichier physique

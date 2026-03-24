@@ -24,7 +24,7 @@ class DocumentController extends Controller
     )]
     public function index()
     {
-        return response()->json(Document::latest()->get());
+        return response()->json(Document::latest()->paginate(15));
     }
 
     #[OA\Post(
@@ -173,6 +173,9 @@ class DocumentController extends Controller
     )]
     public function destroy(Document $document)
     {
+        if (auth()->user()->role !== 'admin') {
+            return response()->json(['message' => 'Accès refusé. Réservé aux administrateurs.'], 403);
+        }
         Storage::disk('public')->delete($document->file);
         $document->delete();
 

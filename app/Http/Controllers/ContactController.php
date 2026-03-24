@@ -22,7 +22,7 @@ class ContactController extends Controller
     )]
     public function index()
     {
-        return response()->json(\App\Models\Contact::latest()->get());
+        return response()->json(\App\Models\Contact::latest()->paginate(15));
     }
 
     #[OA\Post(

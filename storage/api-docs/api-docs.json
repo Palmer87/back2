@@ -598,35 +598,35 @@
                 ]
             }
         },
-        "/biographies": {
+        "/biography": {
             "get": {
                 "tags": [
-                    "Biographies"
+                    "Biographie"
                 ],
-                "summary": "Liste toutes les biographies",
-                "operationId": "8608a8655c625938b6727c81bd4dbff3",
+                "summary": "Obtenir la biographie unique",
+                "operationId": "66c934f10553272d1dd275d3a5f77360",
                 "responses": {
                     "200": {
-                        "description": "Liste des biographies",
+                        "description": "Détails de la biographie",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Biography"
-                                    }
+                                    "$ref": "#/components/schemas/Biography"
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Biographie non trouvée"
                     }
                 }
             },
             "post": {
                 "tags": [
-                    "Biographies"
+                    "Biographie"
                 ],
-                "summary": "Créer une nouvelle biographie",
-                "operationId": "5788ee456503db95907c31d29cba8c22",
+                "summary": "Créer ou mettre à jour la biographie unique",
+                "operationId": "3165a302b8e90e36b46e47a3e93d577a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -634,13 +634,7 @@
                             "schema": {
                                 "required": [
                                     "nom",
-                                    "prenom",
-                                    "date_naissance",
-                                    "lieu_naissance",
-                                    "nationalite",
-                                    "parcours_scolaire",
-                                    "parcours_professionnel",
-                                    "parcours_politique"
+                                    "prenom"
                                 ],
                                 "properties": {
                                     "nom": {
@@ -679,112 +673,8 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Biographie créée avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Biography"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/biographies/{biography}": {
-            "get": {
-                "tags": [
-                    "Biographies"
-                ],
-                "summary": "Détails d'une biographie",
-                "operationId": "6b74b32e2b7873d9eb9d112d8c39b985",
-                "parameters": [
-                    {
-                        "name": "biography",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
                     "200": {
-                        "description": "Biographie trouvée",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Biography"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Biographie non trouvée"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Biographies"
-                ],
-                "summary": "Mettre à jour une biographie",
-                "operationId": "5cd1ac87fc027c9f2ce361968158b462",
-                "parameters": [
-                    {
-                        "name": "biography",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "nom": {
-                                        "type": "string"
-                                    },
-                                    "prenom": {
-                                        "type": "string"
-                                    },
-                                    "date_naissance": {
-                                        "type": "string",
-                                        "format": "date"
-                                    },
-                                    "lieu_naissance": {
-                                        "type": "string"
-                                    },
-                                    "nationalite": {
-                                        "type": "string"
-                                    },
-                                    "parcours_scolaire": {
-                                        "type": "string"
-                                    },
-                                    "parcours_professionnel": {
-                                        "type": "string"
-                                    },
-                                    "parcours_politique": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Biographie mise à jour",
+                        "description": "Biographie enregistrée avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -802,20 +692,10 @@
             },
             "delete": {
                 "tags": [
-                    "Biographies"
+                    "Biographie"
                 ],
-                "summary": "Supprimer une biographie",
-                "operationId": "b303c1a8ce97b0cf000bda2b0aa2d606",
-                "parameters": [
-                    {
-                        "name": "biography",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
+                "summary": "Supprimer la biographie unique",
+                "operationId": "22144518032c3a7cb88ebc03a35e1900",
                 "responses": {
                     "200": {
                         "description": "Biographie supprimée"
@@ -2304,8 +2184,8 @@
             "description": "Authentification"
         },
         {
-            "name": "Biographies",
-            "description": "Biographies"
+            "name": "Biographie",
+            "description": "Biographie"
         },
         {
             "name": "Contacts",

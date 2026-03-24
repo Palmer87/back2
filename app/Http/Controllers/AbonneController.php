@@ -25,7 +25,7 @@ class AbonneController extends Controller
     )]
     public function index()
     {
-        return response()->json(Abonne::latest()->get());
+        return response()->json(Abonne::latest()->paginate(20));
     }
 
     #[OA\Post(

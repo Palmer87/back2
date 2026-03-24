@@ -30,7 +30,7 @@ Route::get('/login', function () {
 Route::get('articles/published', [ArticleController::class, 'published']);
 Route::apiResource('articles', ArticleController::class)->only(['show']);
 Route::apiResource('projects', ProjectController::class)->only(['index', 'show']);
-Route::apiResource('biographies', BiographyController::class)->only(['index', 'show']);
+Route::get('biography', [BiographyController::class, 'index']);
 Route::apiResource('documents', DocumentController::class)->only(['index', 'show']);
 Route::get('documents/{document}/download', [DocumentController::class, 'download']);
 Route::apiResource('media', MediaController::class)->only(['index', 'show']);
@@ -46,7 +46,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('articles/{article}/publish', [ArticleController::class, 'publish']); 
     Route::put('articles/{article}/unpublish', [ArticleController::class, 'unpublish']);
     Route::apiResource('projects', ProjectController::class)->except(['index', 'show']);
-    Route::apiResource('biographies', BiographyController::class)->except(['index', 'show']);
+    Route::delete('projects/{project}/images', [ProjectController::class, 'deleteImage']);
+    Route::post('biography', [BiographyController::class, 'store']);
+    Route::delete('biography', [BiographyController::class, 'destroy']);
     // Gestion de la newsletter
     Route::apiResource('abonnes', AbonneController::class)->only(['index', 'destroy']);
     // Gestion des messages de contact

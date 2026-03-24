@@ -48,10 +48,25 @@ class AuthController extends Controller
             
         ]);
 
+        if (User::count() >= 2) {
+            return response()->json([
+                'message' => 'Nombre maximum d\'utilisateurs atteint (2). Inscription impossible.'
+            ], 403);
+        }
+
+        $allowedRoles = ['admin', 'editeur'];
+        $requestedRole = $request->role;
+        $role = (in_array($requestedRole, $allowedRoles)) ? $requestedRole : 'editeur';
+
+        // Limiter à 2 administrateurs maximum
+        if ($role === 'admin' && User::where('role', 'admin')->count() >= 2) {
+            $role = 'editeur';
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => 'admin',  
+            'role' => $role,
             'password' => Hash::make($request->password)
         ]);
 

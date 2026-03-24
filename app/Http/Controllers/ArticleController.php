@@ -25,7 +25,7 @@ class ArticleController extends Controller
     public function index()
     {
         try  {
-            return response()->json(Article::latest()->get());
+            return response()->json(Article::latest()->paginate(15));
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erreur lors de la récupération des articles',
@@ -189,6 +189,9 @@ class ArticleController extends Controller
     )]
     public function destroy(Article $article)
     {
+        if (auth()->user()->role !== 'admin') {
+            return response()->json(['message' => 'Accès refusé. Réservé aux administrateurs.'], 403);
+        }
         try {
             $article->delete();
             return response()->json([
@@ -262,7 +265,7 @@ public function unpublish(Article $article)
 )]
 public function published()
 {
-    return response()->json(Article::where('publier', true)->get());
+    return response()->json(Article::where('publier', true)->latest()->paginate(15));
 }   
 
 }

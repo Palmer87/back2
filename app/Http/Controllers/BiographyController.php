@@ -85,15 +85,12 @@ class BiographyController extends Controller
 
         $data['auteur'] = auth()->id();
 
-        // On utilise updateOrCreate pour n'avoir qu'un seul enregistrement (celui avec l'id 1)
+        // Singleton: uniquement un enregistrement (id=1)
         $biography = Biography::updateOrCreate(['id' => 1], $data);
 
         return response()->json($biography);
     }
 
-    /**
-     * Suppression de la biographie (RAZ du singleton)
-     */
     #[OA\Delete(
         path: "/biography",
         summary: "Supprimer la biographie unique",
@@ -105,7 +102,10 @@ class BiographyController extends Controller
     )]
     public function destroy()
     {
-        Biography::truncate(); // Supprime tout pour réinitialiser le singleton
+        if (auth()->user()->role !== 'admin') {
+            return response()->json(['message' => 'Accès refusé. Réservé aux administrateurs.'], 403);
+        }
+        Biography::truncate();
         return response()->json(['message' => 'Biographie supprimée avec succès']);
     }
 }
