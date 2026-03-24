@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description');
+            $table->longText('description');
             $table->string('file');
             $table->enum('type', ['Convocation', 'Rapport', 'PV', 'Autre']);
             $table->integer('views')->default(0);

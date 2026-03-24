@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('description');
+            $table->longText('description');
             $table->enum('status', ['realise', 'en_cours', 'a_venir'])->default('en_cours');
             $table->string('image_path')->nullable();
             $table->date('start_date');

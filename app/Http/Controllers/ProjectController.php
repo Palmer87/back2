@@ -40,7 +40,7 @@ class ProjectController extends Controller
                     properties: [
                         new OA\Property(property: "title", type: "string"),
                         new OA\Property(property: "description", type: "string"),
-                        new OA\Property(property: "status", type: "string", example: "en cours"),
+                        new OA\Property(property: "status", type: "string", enum: ["realise", "en_cours", "a_venir"], example: "en cours"),
                         new OA\Property(property: "image_path", type: "string", format: "binary"),
                         new OA\Property(property: "start_date", type: "string", format: "date"),
                         new OA\Property(property: "end_date", type: "string", format: "date")
@@ -115,7 +115,7 @@ class ProjectController extends Controller
                 properties: [
                     new OA\Property(property: "title", type: "string"),
                     new OA\Property(property: "description", type: "string"),
-                    new OA\Property(property: "status", type: "string"),
+                    new OA\Property(property: "status", type: "string", enum: ["realise", "en_cours", "a_venir"], example: "en cours"),
                     new OA\Property(property: "start_date", type: "string", format: "date"),
                     new OA\Property(property: "end_date", type: "string", format: "date")
                 ]

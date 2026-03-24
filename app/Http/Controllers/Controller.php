@@ -11,7 +11,7 @@ use OpenApi\Attributes as OA;
     description: "Documentation Swagger pour la gestion des newsletters et archives."
 )]
 #[OA\Server(
-    url: "http://localhost:8001/api",
+    url: "http://localhost:8000/api",
     description: "Serveur Local"
 )]
 #[OA\SecurityScheme(

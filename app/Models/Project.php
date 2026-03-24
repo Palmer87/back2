@@ -17,6 +17,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: "description", type: "string", example: "Description détaillée du projet..."),
         new OA\Property(property: "status", type: "string", example: "en cours"),
         new OA\Property(property: "image_path", type: "string", nullable: true, example: "projects/image.png"),
+        new OA\Property(property: "full_image_url", type: "string", nullable: true, example: "http://localhost:8000/storage/projects/image.png"),
         new OA\Property(property: "start_date", type: "string", format: "date", nullable: true),
         new OA\Property(property: "end_date", type: "string", format: "date", nullable: true),
         new OA\Property(property: "auteur", type: "integer", description: "ID de l'utilisateur ayant créé le projet", example: 1),
@@ -38,6 +39,13 @@ class Project extends Model
         'end_date',
         'auteur',
     ];
+
+    protected $appends = ['full_image_url'];
+
+    public function getFullImageUrlAttribute()
+    {
+        return $this->image_path ? asset('storage/' . $this->image_path) : null;
+    }
 
     public function user()
     {

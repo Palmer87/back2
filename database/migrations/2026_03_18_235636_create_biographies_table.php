@@ -18,9 +18,9 @@ return new class extends Migration
             $table->date('date_naissance');
             $table->string('lieu_naissance');
             $table->string('nationalite');
-            $table->text('parcours_scolaire');
-            $table->text('parcours_professionnel');
-            $table->text('parcours_politique');
+            $table->longText('parcours_scolaire');
+            $table->longText('parcours_professionnel');
+            $table->longText('parcours_politique');
             $table->string('photo')->nullable();
             $table->foreignId('auteur')->constrained('users');
             $table->timestamps();

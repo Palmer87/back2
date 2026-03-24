@@ -50,7 +50,7 @@ class ArticleController extends Controller
                         new OA\Property(property: "content", type: "string"),
                         new OA\Property(property: "image_url", type: "string", format: "binary"),
                         new OA\Property(property: "video_url", type: "string", format: "binary"),
-                        new OA\Property(property: "typePart", type: "string", example: "communique"),
+                        new OA\Property(property: "typePart", type: "string", enum  : ['communique', 'discours', 'interview', 'autre']),
                         new OA\Property(property: "publier_le", type: "string", format: "date"),
                         new OA\Property(property: "retirer_le", type: "string", format: "date")
                     ]
@@ -189,11 +189,17 @@ class ArticleController extends Controller
     )]
     public function destroy(Article $article)
     {
-        $article->delete();
-
-        return response()->json([
+        try {
+            $article->delete();
+            return response()->json([
             'message' => 'Article supprimé avec succès'
         ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Erreur lors de la suppression de l\'article',
+            'error' => $e->getMessage()
+        ], 500);
+    }
     }
     // publier un article
 #[OA\Put(

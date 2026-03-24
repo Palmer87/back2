@@ -9,6 +9,7 @@ use App\Http\Controllers\BiographyController;
 use App\Http\Controllers\AbonneController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\MediaController;
 
 
 Route::get('/test', function () {
@@ -32,6 +33,7 @@ Route::apiResource('projects', ProjectController::class)->only(['index', 'show']
 Route::apiResource('biographies', BiographyController::class)->only(['index', 'show']);
 Route::apiResource('documents', DocumentController::class)->only(['index', 'show']);
 Route::get('documents/{document}/download', [DocumentController::class, 'download']);
+Route::apiResource('media', MediaController::class)->only(['index', 'show']);
 // Routes protégées nécessitant un token d'authentification
 Route::middleware('auth:sanctum')->group(function () {
     // Utilisateur courant & Deconnexion
@@ -51,6 +53,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('contacts', App\Http\Controllers\ContactController::class)->except(['store', 'update']);
     // Gestion documentaire
     Route::apiResource('documents', DocumentController::class)->except(['index', 'show']);
+    // Gestion des médias
+    Route::apiResource('media', MediaController::class)->except(['index', 'show']);
     // Archives et Brouillons de Newsletters
     Route::apiResource('newsletters', NewsletterController::class);
     Route::post('/newsletters/{id}/send', [NewsletterController::class, 'sendNewsletter']); 

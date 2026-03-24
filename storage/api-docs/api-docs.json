@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8001/api",
+            "url": "http://localhost:8000/api",
             "description": "Serveur Local"
         }
     ],
@@ -178,7 +178,12 @@
                                     },
                                     "typePart": {
                                         "type": "string",
-                                        "example": "communique"
+                                        "enum": [
+                                            "communique",
+                                            "discours",
+                                            "interview",
+                                            "autre"
+                                        ]
                                     },
                                     "publier_le": {
                                         "type": "string",
@@ -1221,6 +1226,139 @@
                 }
             }
         },
+        "/media": {
+            "get": {
+                "tags": [
+                    "Médias"
+                ],
+                "summary": "Liste tous les médias",
+                "operationId": "f57e9fcf8e6629bd3104088fa29ad9bf",
+                "responses": {
+                    "200": {
+                        "description": "Liste des médias",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Media"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Médias"
+                ],
+                "summary": "Téléverser un nouveau média",
+                "operationId": "6c4c309050b66c61c31a8a5bd68ae05c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "path"
+                                ],
+                                "properties": {
+                                    "path": {
+                                        "description": "Le fichier à téléverser",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "name": {
+                                        "description": "Nom facultatif pour le média",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Média créé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Media"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/media/{id}": {
+            "get": {
+                "tags": [
+                    "Médias"
+                ],
+                "summary": "Détails d'un média",
+                "operationId": "1fa86510ce05c007e7f370408edec94f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Média trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Media"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Média non trouvé"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Médias"
+                ],
+                "summary": "Supprimer un média",
+                "operationId": "ecada77d27777c77a9af8c116b9aa630",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Média supprimé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/newsletters": {
             "get": {
                 "tags": [
@@ -1553,7 +1691,12 @@
                                     },
                                     "status": {
                                         "type": "string",
-                                        "example": "en cours"
+                                        "example": "en cours",
+                                        "enum": [
+                                            "realise",
+                                            "en_cours",
+                                            "a_venir"
+                                        ]
                                     },
                                     "image_path": {
                                         "type": "string",
@@ -1653,7 +1796,13 @@
                                         "type": "string"
                                     },
                                     "status": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "en cours",
+                                        "enum": [
+                                            "realise",
+                                            "en_cours",
+                                            "a_venir"
+                                        ]
                                     },
                                     "start_date": {
                                         "type": "string",
@@ -1770,6 +1919,16 @@
                     "video_url": {
                         "type": "string",
                         "example": "videos/clip.mp4",
+                        "nullable": true
+                    },
+                    "full_image_url": {
+                        "type": "string",
+                        "example": "http://localhost:8000/storage/images/photo.jpg",
+                        "nullable": true
+                    },
+                    "full_video_url": {
+                        "type": "string",
+                        "example": "http://localhost:8000/storage/videos/clip.mp4",
                         "nullable": true
                     },
                     "typePart": {
@@ -1948,6 +2107,41 @@
                 },
                 "type": "object"
             },
+            "Media": {
+                "title": "Media",
+                "description": "Modèle représentant un fichier média (image, vidéo, document)",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "image.jpg"
+                    },
+                    "path": {
+                        "type": "string",
+                        "example": "media/image.jpg"
+                    },
+                    "url": {
+                        "type": "string",
+                        "example": "http://localhost:8000/storage/media/image.jpg"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "example": 1024
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
             "Newsletter": {
                 "title": "Newsletter",
                 "description": "Objet représentant une newsletter (archive ou projet)",
@@ -2020,6 +2214,11 @@
                     "image_path": {
                         "type": "string",
                         "example": "projects/image.png",
+                        "nullable": true
+                    },
+                    "full_image_url": {
+                        "type": "string",
+                        "example": "http://localhost:8000/storage/projects/image.png",
                         "nullable": true
                     },
                     "start_date": {
@@ -2115,6 +2314,10 @@
         {
             "name": "Documents",
             "description": "Documents"
+        },
+        {
+            "name": "Médias",
+            "description": "Médias"
         },
         {
             "name": "Newsletters",
